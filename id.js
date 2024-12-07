@@ -9,13 +9,13 @@ var firstname = params.get("firstname");
 var surname = params.get("surname");
 var image = params.get("image");
 
-function hideAddressBar(){
-  if(document.documentElement.scrollHeight < window.outerHeight / window.devicePixelRatio)
+function hideAddressBar() {
+  if (document.documentElement.scrollHeight < window.outerHeight / window.devicePixelRatio)
     document.documentElement.style.height = (window.outerHeight / window.devicePixelRatio) + 'px';
   setTimeout(window.scrollTo(1, 1), 0);
 }
-window.addEventListener("load", function() { hideAddressBar(); });
-window.addEventListener("orientationchange", function() { hideAddressBar(); });
+window.addEventListener("load", function () { hideAddressBar(); });
+window.addEventListener("orientationchange", function () { hideAddressBar(); });
 
 let webManifest = {
   "name": "",
@@ -45,28 +45,34 @@ document.querySelector(".surname").innerHTML = surname.toUpperCase();
 document.querySelector(".firstname").innerHTML = firstname.toUpperCase();
 document.querySelector(".id_own_image").style.backgroundImage = "url('" + image + "')";
 
-var options = { year: 'numeric', month: 'numeric', day: 'numeric' };
+function formatDate(date) {
+  let day = String(date.getDate()).padStart(2, '0');
+  let month = String(date.getMonth() + 1).padStart(2, '0');
+  let year = date.getFullYear();
+  return `${day}.${month}.${year}`;
+}
+
 var date = new Date();
-document.querySelector(".bottom_update_value").innerHTML = date.toLocaleDateString("pl-PL", options);
+document.querySelector(".bottom_update_value").innerHTML = formatDate(date);
 
 setClock();
 function setClock() {
-    date = new Date();
+  date = new Date();
 
-    // Pobieranie godzin, minut i sekund, a następnie formatowanie ich z zerem na początku
-    let hours = String(date.getHours()).padStart(2, '0');
-    let minutes = String(date.getMinutes()).padStart(2, '0');
-    let seconds = String(date.getSeconds()).padStart(2, '0');
+  // Pobieranie godzin, minut i sekund, a następnie formatowanie ich z zerem na początku
+  let hours = String(date.getHours()).padStart(2, '0');
+  let minutes = String(date.getMinutes()).padStart(2, '0');
+  let seconds = String(date.getSeconds()).padStart(2, '0');
 
-    // Aktualizacja wyświetlanego czasu
-    time.innerHTML = "Czas: " + hours + ":" + minutes + ":" + seconds + " " + date.toLocaleDateString("pl-PL", options);
+  // Aktualizacja wyświetlanego czasu
+  time.innerHTML = `Czas: ${hours}:${minutes}:${seconds} ${formatDate(date)}`;
 
-    // Ustawienie opóźnienia na 1 sekundę przed kolejną aktualizacją
-    delay(1000).then(() => {
-        setClock();
-    });
+  // Ustawienie opóźnienia na 1 sekundę przed kolejną aktualizacją
+  delay(1000).then(() => {
+    setClock();
+  });
 }
 
 function delay(time) {
-    return new Promise(resolve => setTimeout(resolve, time));
+  return new Promise(resolve => setTimeout(resolve, time));
 }
